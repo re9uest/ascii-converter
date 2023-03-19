@@ -31,7 +31,7 @@ def make_ascii_photo(in_path: str, out_path: str, compression: int, dimming_inte
     print('Converting photo...')
     img = cv2.imread(in_path)
     height, width, _ = img.shape
-    dsize = (int(width) // compression, int(height) // compression)
+    dsize = (int(width / compression), int(height / compression))
     resized_img = cv2.resize(img, dsize)
     ascii_img = make_ascii_frame(resized_img, dsize, dimming_intensity)
     cv2.imwrite(f'{out_path}/ascii_image.jpg', ascii_img)
@@ -48,7 +48,7 @@ def make_ascii_video(in_path: str, out_path: str, compression: int, dimming_inte
     height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    dsize = (int(width) // compression, int(height) // compression)
+    dsize = (int(width / compression), int(height / compression))
 
     frames = []
     without_audio = 'temp.avi'
@@ -96,8 +96,8 @@ def validation(args: argparse.Namespace):
                 print('Invalid in path.')
                 return 0
             else:
-                if args.compression < 4.5 or args.compression > 255.0:
-                    print('Invalid compression.')
+                if args.dimming_intensity < 4.5 or args.dimming_intensity > 255.0:
+                    print('Invalid dimming intensity.')
                     return 0
                 else:
                     return 1
