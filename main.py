@@ -67,7 +67,6 @@ def make_ascii_video(in_path: str, out_path: str, compression: int, dimming_inte
         frames_bar.next()
     ascii_frames = pool.starmap(make_ascii_frame, zip(frames, repeat(dsize), repeat(dimming_intensity)))
     for f in ascii_frames:
-        frames_bar.next()
         temp.write(f)
     temp.release()
     frames_bar.finish()
@@ -83,35 +82,26 @@ def make_ascii_video(in_path: str, out_path: str, compression: int, dimming_inte
     os.remove(without_audio)
 
 
-def validation(args: argparse.Namespace):
-    if args.type != 'video' and args.type != 'photo':
-        print('Invalid type of media.')
+def path_validation(args: argparse.Namespace):
+    if not os.path.exists(args.outdir):
+        print('Invalid out path.')
         return 0
     else:
-        if not os.path.exists(args.outdir):
-            print('Invalid out path.')
+        if not (os.path.exists(args.indir) and os.path.isfile(args.indir)):
+            print('Invalid in path.')
             return 0
         else:
-            if not (os.path.exists(args.indir) and os.path.isfile(args.indir)):
-                print('Invalid in path.')
-                return 0
-            else:
-                if args.dimming_intensity < 4.5 or args.dimming_intensity > 255.0:
-                    print('Invalid dimming intensity.')
-                    return 0
-                else:
-                    return 1
+            return 1
 
 
 def main():
     args = parser.parse_args()
     
-    if validation(args):
+    if path_validation(args):
         if args.type == 'photo':
             make_ascii_photo(args.indir, args.outdir, args.compression, args.dimming_intensity)
         elif args.type == 'video':
             make_ascii_video(args.indir, args.outdir, args.compression, args.dimming_intensity)
-
         return 1
     else:
         return 0
