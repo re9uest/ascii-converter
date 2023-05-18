@@ -25,6 +25,5 @@ parser.add_argument('-c',
 parser.add_argument('-di',
                     '--dimming_intensity',
                     type=float,
-                    choices=0.1 * np.arange(4.5 / 0.1, 255.0 / 0.1),
                     default=9.8,
                     help='adjusts the darkness of the image to the level specified (4.5 - 255.0, default: 9.8)')
